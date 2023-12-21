@@ -3,7 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const app = express();
 dotenv.config();
-const connectToDatabase = require("./src/db/db");
+const { connectToDatabase } = require("./src/db/db");
+const initializeDatabase = require("./src/db/initializeDatabase");
 
 const PORT = 5000;
 app.use(cors());
@@ -16,4 +17,4 @@ app.listen(PORT, () => {
   console.log(`Listening to port no. ${PORT}`);
 });
 
-connectToDatabase();
+initializeDatabase();

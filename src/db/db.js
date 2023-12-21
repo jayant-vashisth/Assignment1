@@ -1,4 +1,4 @@
-const pg = require("pg");
+const { Pool } = require("pg");
 const fs = require("fs");
 
 const config = {
@@ -13,10 +13,10 @@ const config = {
   },
 };
 
-const client = new pg.Client(config);
+const client = new Pool(config);
 
-const connectToDatabase = () => {
-  client.connect((err) => {
+const connectToDatabase = async () => {
+  await client.connect((err) => {
     if (err) throw err;
     client.query("SELECT VERSION()", [], function (err, result) {
       if (err) throw err;
@@ -29,4 +29,7 @@ const connectToDatabase = () => {
   });
 };
 
-module.exports = connectToDatabase;
+module.exports = {
+  connectToDatabase,
+  client,
+};
