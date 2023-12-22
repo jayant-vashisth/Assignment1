@@ -3,8 +3,8 @@ const importCSVData = require("./importCsvData");
 const csvFiles = [
   { filePath: "data/Pickup.csv" },
   { filePath: "data/Delivery exceptions.csv" },
-  { filePath: "data/Delivered.csv" },
   { filePath: "data/Returned.csv" },
+  { filePath: "data/Delivered.csv" },
 ];
 
 const script = async () => {

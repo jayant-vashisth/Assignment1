@@ -4,10 +4,11 @@ const CardStatus = require("../models/CardStatus");
 const getCardStatus = async (req, res) => {
   try {
     const { ph, cardId } = req.query;
-
+    
     if (ph) {
+      const updatedPhone = ph?.replace(/["']/g, "").replace(/^0+/, "");
       // If phone number is provided, find the user and then get the card status
-      const user = await User.findOne({ phoneNo: ph });
+      const user = await User.findOne({ phoneNo: updatedPhone });
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
@@ -18,12 +19,11 @@ const getCardStatus = async (req, res) => {
       if (!cardStatus) {
         return res.status(404).json({ error: "Card status not found" });
       }
-      
+
       res.status(200).json({
         cardId: user.cardId,
         phoneNo: user.phoneNo,
-        status: cardStatus.cardId,
-        timestamp: cardStatus.timestamp,
+        cardStatus,
       });
     } else if (cardId) {
       // If cardId is provided, directly query the CardStatus collection
@@ -33,11 +33,7 @@ const getCardStatus = async (req, res) => {
         return res.status(404).json({ error: "Card status not found" });
       }
 
-      res.status(200).json({
-        cardId: cardStatus.cardId,
-        status: cardStatus.status,
-        timestamp: cardStatus.timestamp,
-      });
+      res.status(200).json(cardStatus);
     } else {
       // If neither phone number nor cardId is provided, return an error
       return res
