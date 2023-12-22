@@ -1,35 +1,16 @@
-const { Pool } = require("pg");
-const fs = require("fs");
-
-const config = {
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  host: process.env.HOST,
-  port: process.env.PORT,
-  database: process.env.DATABASE,
-  ssl: {
-    rejectUnauthorized: true,
-    ca: fs.readFileSync("./ca.pem").toString(),
-  },
-};
-
-const client = new Pool(config);
+const mongoose = require("mongoose");
 
 const connectToDatabase = async () => {
-  await client.connect((err) => {
-    if (err) throw err;
-    client.query("SELECT VERSION()", [], function (err, result) {
-      if (err) throw err;
-
-      console.log(result.rows[0].version);
-      client.end(function (err) {
-        if (err) throw err;
-      });
+  mongoose
+    .connect(process.env.DATABASE_HOST)
+    .then(() => {
+      console.log("db connected");
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 module.exports = {
   connectToDatabase,
-  client,
 };
