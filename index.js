@@ -7,7 +7,7 @@ const script = require("./src/scripts/script");
 dotenv.config();
 const { connectToDatabase } = require("./src/db/db");
 
-const PORT =  5002;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use("/api/card", cardRouter);

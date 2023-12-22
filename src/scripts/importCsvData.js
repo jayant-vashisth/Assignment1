@@ -10,7 +10,7 @@ const importCSVData = async (filePath) => {
     const parser = fileStream.pipe(csv());
 
     for await (const row of parser) {
-      console.log("first", row);
+      
       let user = await User.findOne({ cardId: row["Card ID"] });
 
       let phoneNumber;
