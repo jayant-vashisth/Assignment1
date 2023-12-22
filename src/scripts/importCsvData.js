@@ -4,13 +4,15 @@ const CardStatus = require("../models/CardStatus");
 const User = require("../models/Users");
 
 const importCSVData = async (filePath) => {
+  //This function reads the data from the CSV file and add it to the database
   try {
     const fileStream = fs.createReadStream(filePath);
     const parser = fileStream.pipe(csv());
 
     for await (const row of parser) {
       let user = await User.findOne({ cardId: row.cardId });
-      // If the user doesn't exist, create a new user
+
+      // If the user doesn't exist, create a new user in the User collection for better data structuring
       if (!user) {
         user = await User.create({
           cardId: row.cardId,
@@ -20,10 +22,10 @@ const importCSVData = async (filePath) => {
         });
       }
 
-      // Specify the criteria to check if the document with the given cardId exists
+      // we are using cardId to check wheter that data exists or not
       const filter = { cardId: row.cardId };
 
-      let status;
+      let status; //This is to add the status if by chance status or comment (considering both to be same) is not mentioned in the CSV file
       if (filePath.includes("Pickup")) {
         status = row.comment ? row.comment : "Pickedup";
       } else if (filePath.includes("Delivery exceptions")) {
@@ -34,7 +36,7 @@ const importCSVData = async (filePath) => {
         status = row.comment ? row.comment : "Returned";
       }
 
-      // Create the update document based on the row data
+      // If the document is already present in the database then we'll be updating it's status, timestamp based on latest data present in the CSV
       const updateDocument = {
         $set: {
           status: status,
@@ -43,7 +45,7 @@ const importCSVData = async (filePath) => {
         },
       };
 
-  
+      //Upsert is used to update the document if it already exists otherwise it will create a new document
       const options = { upsert: true };
 
       await CardStatus.collection.updateOne(filter, updateDocument, options);

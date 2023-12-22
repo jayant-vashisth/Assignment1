@@ -1,24 +1,24 @@
 const express = require("express");
+const app = express();
 const dotenv = require("dotenv");
-dotenv.config();
 const cors = require("cors");
 const cardRouter = require("./src/routes/cardStatus");
-const app = express();
+const script = require("./src/scripts/script");
+dotenv.config();
 const { connectToDatabase } = require("./src/db/db");
-const updateDataBase = require("./src/helper/script");
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
 app.use(cors());
+app.use("/api/card", cardRouter);
 
 app.get("/", (req, res) => {
-  res.send("<h1>Hi my name is jayant vashisth</h1>");
+  res.send("hello world");
 });
-
-app.use("/api/card", cardRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening to port no. ${PORT}`);
 });
 
-connectToDatabase();
-updateDataBase();
+connectToDatabase(); //This function is used to connect database to our backend
+script(); //This script is used to update our database based on the latest data present in CSV files

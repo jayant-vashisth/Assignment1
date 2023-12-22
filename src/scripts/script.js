@@ -7,16 +7,14 @@ const csvFiles = [
   { filePath: "data/Returned.csv" },
 ];
 
-const updateDataBase = async () => {
+const script = async () => {
   try {
-    for (const csvFile of csvFiles) {
+    for (const csvFile of csvFiles) {      //This loop adds the data present in CSV file to the database using the function importCSVData
       await importCSVData(csvFile.filePath);
     }
-
-    console.log("Data import complete");
   } catch (error) {
     console.error("Error importing data:", error);
   }
 };
 
-module.exports = updateDataBase;
+module.exports = script;

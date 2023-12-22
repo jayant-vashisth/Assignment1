@@ -5,6 +5,6 @@ const {
 
 const router = Router();
 
-router.get("/get_card_status", getCardStatus);
+router.get("/get_card_status", getCardStatus);  
 
 module.exports = router;
